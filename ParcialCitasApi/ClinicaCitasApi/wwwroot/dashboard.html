@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ClinicaCitasApi | Dashboard</title>
+
+  <!-- Bootstrap CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+  <link href="/assets/css/clinic.css" rel="stylesheet">
+
+  
+  <style>
+    .kpi-link { text-decoration: none; color: inherit; display: block; }
+    .kpi-link:hover { filter: brightness(0.98); }
+  </style>
+</head>
+<body onload="loadDashboard()">
+
+  <nav class="navbar navbar-dark py-3">
+    <div class="container">
+      <div class="d-flex align-items-center gap-3">
+        <div class="brand-badge rounded-4 px-3 py-2 text-white">
+          <i class="bi bi-hospital me-2"></i><strong>ClinicaCitasApi</strong>
+        </div>
+        <span class="text-white-50">Panel de control</span>
+      </div>
+      <div class="d-flex gap-2">
+        <a class="btn btn-light btn-clinic" href="/swagger"><i class="bi bi-journal-text me-2"></i>Swagger</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container my-4">
+    <div class="p-4 hero rounded-4 mb-4">
+      <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+        <div class="d-flex align-items-center gap-3">
+          <div class="hero-icon"><i class="bi bi-calendar2-check fs-3"></i></div>
+          <div>
+            <h2 class="mb-1">Gestión de Citas Médicas</h2>
+            <div class="muted">Accesos rápidos y métricas de la API (GET).</div>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2 flex-wrap">
+          <a class="btn btn-primary btn-clinic" href="/pacientes.html"><i class="bi bi-people me-2"></i>Pacientes</a>
+          <a class="btn btn-outline-primary btn-clinic" href="/medicos.html"><i class="bi bi-person-badge me-2"></i>Médicos</a>
+          <a class="btn btn-outline-primary btn-clinic" href="/citas.html"><i class="bi bi-calendar-event me-2"></i>Citas</a>
+        </div>
+      </div>
+    </div>
+
+    <div id="dashboardError" class="text-danger mb-3"></div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-4">
+        <div class="kpi card-soft">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <div class="num" id="kpiPacientes">—</div>
+              <div class="lbl">Pacientes registrados</div>
+            </div>
+            <i class="bi bi-people fs-2 text-primary"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-4">
+        <div class="kpi card-soft">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <div class="num" id="kpiMedicos">—</div>
+              <div class="lbl">Médicos disponibles</div>
+            </div>
+            <i class="bi bi-person-badge fs-2 text-primary"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Citas Totales -> /citas.html -->
+      <div class="col-12 col-md-4">
+        <a class="kpi-link" href="/citas.html" title="Ver todas las citas">
+          <div class="kpi card-soft">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <div class="num" id="kpiCitas">—</div>
+                <div class="lbl">Citas totales</div>
+              </div>
+              <i class="bi bi-calendar2-check fs-2 text-primary"></i>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="row g-3">
+      <!-- Confirmadas -> /citas.html?estado=confirmada -->
+      <div class="col-12 col-lg-4">
+        <a class="kpi-link" href="/citas.html?estado=confirmada" title="Ver citas confirmadas">
+          <div class="card card-soft">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="fs-4 fw-bold" id="kpiConfirmadas">—</div>
+                  <div class="muted">Confirmadas</div>
+                </div>
+                <span class="badge-status badge-confirmada">OK</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Programadas -> /citas.html?estado=programada -->
+      <div class="col-12 col-lg-4">
+        <a class="kpi-link" href="/citas.html?estado=programada" title="Ver citas programadas">
+          <div class="card card-soft">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="fs-4 fw-bold" id="kpiProgramadas">—</div>
+                  <div class="muted">Programadas</div>
+                </div>
+                <span class="badge-status badge-programada">Pendiente</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Canceladas -> /citas.html?estado=cancelada -->
+      <div class="col-12 col-lg-4">
+        <a class="kpi-link" href="/citas.html?estado=cancelada" title="Ver citas canceladas">
+          <div class="card card-soft">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <div class="fs-4 fw-bold" id="kpiCanceladas">—</div>
+                  <div class="muted">Canceladas</div>
+                </div>
+                <span class="badge-status badge-cancelada">Anulada</span>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="footer mt-4">
+      <div>API: <span class="muted">/api/pacientes, /api/medicos, /api/citas</span> · Documentación: <a href="/swagger">Swagger</a></div>
+    </div>
+  </main>
+
+  <script src="/assets/js/app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
